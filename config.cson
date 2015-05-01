@@ -1,0 +1,49 @@
+"*":
+  editor:
+    invisibles: {}
+    softWrap: true
+    preferredLineLength: 200
+    softTabs: false
+    fontFamily: "Inconsolata"
+    fontSize: 17
+  core:
+    themes: [
+      "seti-ui"
+      "base16-tomorrow-dark-theme"
+    ]
+  "exception-reporting":
+    userId: "e46f9b99-f096-8f42-dc8c-33910afb680a"
+  welcome:
+    showOnStartup: false
+  react: {}
+  jsformat:
+    format_on_save: false
+  "atom-beautify":
+    _analyticsUserId: "b06513da-7f09-4729-b48e-01c7efb2b7d3"
+  "atom-pair":
+    slack_url: "https://hooks.slack.com/services/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"
+  autocomplete: {}
+  minimap: {}
+  jshint:
+    supportLintingJsx: true
+  "atom-color-highlight": {}
+  emmet: {}
+  "tree-view": {}
+".jsx.regexp.source":
+  editor:
+    preferredLineLength: 120
+".coffee.jsx.source":
+  editor:
+    preferredLineLength: 120
+".js.jsx.source":
+  editor:
+    preferredLineLength: 120
+".ini.source":
+  editor:
+    preferredLineLength: 120
+".jsx.source":
+  editor:
+    preferredLineLength: 120
+".scss.source":
+  editor:
+    preferredLineLength: 120

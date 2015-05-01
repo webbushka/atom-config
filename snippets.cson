@@ -1,0 +1,72 @@
+# Your snippets
+#
+# Atom snippets allow you to enter a simple prefix in the editor and hit tab to
+# expand the prefix into a larger code block with templated values.
+#
+# You can create a new snippet in this file by typing "snip" and then hitting
+# tab.
+#
+# An example CoffeeScript snippet to expand log to console.log:
+#
+# '.source.coffee':
+#   'Console log':
+#     'prefix': 'log'
+#     'body': 'console.log $1'
+#
+
+'.source.js':
+  'ES6 fn':
+    'prefix': '_fn'
+    'body': """
+      ${1:fnName}(${2:param}) {
+        ${3:body}
+      },
+    """
+
+  'ES6 Lambda':
+    'prefix': '_lam'
+    'body': """
+      (${1:prop}) => {
+        return ${2:body}
+      }
+    """
+
+  'JSON Property':
+    'prefix': '_fd'
+    'body': """
+      ${1:field}: ${2:value},
+    """
+
+  'JSON Struct':
+    'prefix':'_st'
+    'body': """
+      {
+        ${1:field}: {
+          ${2:body}
+        },
+      }
+    """
+
+  'Faker':
+    'prefix': '_fk'
+    'body': 'faker.${1}.${2}(${3})${4}'
+
+  'JS Require':
+    'prefix': '_re'
+    'body': 'require(\'${1:module}\')${2}'
+
+  'JS Import':
+    'prefix': '_im'
+    'body': 'import ${1} from \'${2}\';'
+
+  'Export Default':
+    'prefix': '_ex'
+    'body': 'export default ${1};'
+
+  'Module exports':
+    'prefix': '_me'
+    'body': 'module.exports = {${1}};'
+
+  'Use Strict':
+    'prefix': '_us'
+    'body': '\'use strict\';'

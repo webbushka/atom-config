@@ -1,0 +1,52 @@
+# Your keymap
+#
+# Atom keymaps work similarly to style sheets. Just as style sheets use
+# selectors to apply styles to elements, Atom keymaps use selectors to associate
+# keystrokes with events in specific contexts.
+#
+# You can create a new keybinding in this file by typing "key" and then hitting
+# tab.
+#
+# Here's an example taken from Atom's built-in keymap:
+#
+# 'atom-text-editor':
+#   'enter': 'editor:newline'
+#
+# 'atom-workspace':
+#   'ctrl-shift-p': 'core:move-up'
+#   'ctrl-p': 'core:move-down'
+#
+# You can find more information about keymaps in these guides:
+# * https://atom.io/docs/latest/customizing-atom#customizing-key-bindings
+# * https://atom.io/docs/latest/advanced/keymaps
+#
+# This file uses CoffeeScript Object Notation (CSON).
+# If you are unfamiliar with CSON, you can read more about it here:
+# https://github.com/bevry/cson#what-is-cson
+
+'.platform-darwin atom-text-editor:not([mini])':
+	#unset some emmet stuff that bugs me
+	'unset!': 'emmet:balance-outward',
+
+	# indent a line
+	'cmd-ctrl-right' : 'editor:indent-selected-rows',
+	'cmd-ctrl-left' : 'editor:outdent-selected-rows',
+	# duplicate a line
+	'cmd-alt-down' : 'editor:duplicate-lines',
+	'cmd-alt-up' : 'editor:duplicate-lines',
+	# delete a line
+	'cmd-d' : 'editor:delete-line',
+	# select-next
+	'ctrl-d' : 'find-and-replace:select-next',
+	# open snippets
+	'cmd-ctrl-s' : 'application:open-your-snippets',
+	# open keymap
+	'cmd-ctrl-k' : 'application:open-your-keymap'
+
+# Stop emmet from hijacking tab from snippets and autocomplete
+'atom-text-editor.autocomplete-active:not([mini])':
+  'tab': 'autocomplete-plus:confirm'
+
+# Stop emmet from hijacking tab from snippet tab stops
+'atom-text-editor[data-grammar="text html basic"]:not([mini]), atom-text-editor[data-grammar~="jade"]:not([mini]), atom-text-editor[data-grammar~="css"]:not([mini]), atom-text-editor[data-grammar~="sass"]:not([mini])':
+  'tab': 'snippets:next-tab-stop'
