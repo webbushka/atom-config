@@ -27,8 +27,8 @@
     'prefix': '_lam'
     'body': """
       (${1:prop}) => {
-        return ${2:body}
-      }
+        ${3}
+      }${2:;}
     """
 
   'JSON Property':

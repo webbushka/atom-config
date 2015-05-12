@@ -5,11 +5,15 @@
     preferredLineLength: 200
     softTabs: false
     fontFamily: "Inconsolata"
-    fontSize: 17
+    fontSize: 18
   core:
     themes: [
       "seti-ui"
       "base16-tomorrow-dark-theme"
+    ]
+    disabledPackages: [
+      "tabs"
+      "tree-view"
     ]
   "exception-reporting":
     userId: "e46f9b99-f096-8f42-dc8c-33910afb680a"
@@ -28,22 +32,28 @@
     supportLintingJsx: true
   "atom-color-highlight": {}
   emmet: {}
-  "tree-view": {}
-".jsx.regexp.source":
+  "tree-view":
+    hideVcsIgnoredFiles: false
+    hideIgnoredNames: false
+    showOnRightSide: false
+    sortFoldersBeforeFiles: true
+  tabs:
+    showIcons: true
+".js.jsx.source":
   editor:
     preferredLineLength: 120
 ".coffee.jsx.source":
   editor:
     preferredLineLength: 120
-".js.jsx.source":
+".jsx.regexp.source":
   editor:
     preferredLineLength: 120
-".ini.source":
+".scss.source":
   editor:
     preferredLineLength: 120
 ".jsx.source":
   editor:
     preferredLineLength: 120
-".scss.source":
+".ini.source":
   editor:
     preferredLineLength: 120
