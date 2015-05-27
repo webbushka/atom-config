@@ -1,3 +1,20 @@
+## 2.23.0
+* Added scriptcs support
+
+## 2.22.0
+* Removed support for Atom Achievements :( (breaks the coming 1.0 API)
+* Support for Kotlinc
+* New way for us to manage contributions and changelog
+
+## 2.21.0
+* Update BufferedProcess API
+* Addressed deprecations from the Atom API
+* Use the new Path API
+
+## 2.20.0
+* Add OCaml support
+* :checkered_flag: Enhance selection based Lua support
+
 ## 2.19.0
 * Add Racket support
 * Add Forth support

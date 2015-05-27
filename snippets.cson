@@ -60,7 +60,7 @@
     'body': 'import ${1} from \'${2}\';'
 
   'Export Default':
-    'prefix': '_ex'
+    'prefix': '_ed'
     'body': 'export default ${1};'
 
   'Module exports':

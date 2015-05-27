@@ -1,24 +1,33 @@
+{CompositeDisposable, Disposable} = require 'atom'
+
 contentCheckRegex = null
 defaultDetectReactFilePattern = '/((require\\([\'"]react(?:-native)?[\'"]\\)))|(import\\s+\\w+\\s+from\\s+[\'"]react(?:-native)?[\'"])/'
 autoCompleteTagStartRegex = /(<)([a-zA-Z0-9\.:$_]+)/g
 autoCompleteTagCloseRegex = /(<\/)([^>]+)(>)/g
 
+jsxTagStartPattern = '(?x)((^|=|return)\\s*<([^!/?](?!.+?(</.+?>))))'
+jsxComplexAttributePattern = '(?x)\\{ [^}"\']* $|\\( [^)"\']* $'
+decreaseIndentForNextLinePattern = '(?x)
+/>\\s*(,|;)?\\s*$
+| ^\\s*\\S+.*</[-_\\.A-Za-z0-9]+>$'
+
 class AtomReact
   config:
+    disableAutoClose:
+      type: 'boolean'
+      default: false
     detectReactFilePattern:
       type: 'string'
       default: defaultDetectReactFilePattern
     jsxTagStartPattern:
       type: 'string'
-      default: '(?x)((^|=|return)\\s*<([^!/?](?!.+?(</.+?>))))'
+      default: jsxTagStartPattern
     jsxComplexAttributePattern:
       type: 'string'
-      default: '(?x)\\{ [^}"\']* $|\\( [^)"\']* $'
+      default: jsxComplexAttributePattern
     decreaseIndentForNextLinePattern:
       type: 'string'
-      default: '(?x)
-      />\\s*(,|;)?\\s*$
-      | ^\\s*\\S+.*</[-_\\.A-Za-z0-9]+>$'
+      default: decreaseIndentForNextLinePattern
 
   constructor: ->
   patchEditorLangModeAutoDecreaseIndentForBufferRow: (editor) ->
@@ -116,7 +125,7 @@ class AtomReact
     HTMLtoJSX = require './htmltojsx'
     converter = new HTMLtoJSX(createClass: false)
 
-    editor = atom.workspace.getActiveEditor()
+    editor = atom.workspace.getActiveTextEditor()
 
     return if not @isReactEnabledForEditor editor
 
@@ -140,7 +149,7 @@ class AtomReact
     jsxformat = require 'jsxformat'
     _ = require 'lodash'
 
-    editor = atom.workspace.getActiveEditor()
+    editor = atom.workspace.getActiveTextEditor()
 
     return if not @isReactEnabledForEditor editor
 
@@ -191,7 +200,9 @@ class AtomReact
             editor.setCursorBufferPosition([firstChangedLine, range[0][1]])
 
   autoCloseTag: (eventObj, editor) ->
-    return if not @isReactEnabledForEditor editor
+    return if atom.config.get('react.disableAutoClose')
+
+    return if not @isReactEnabledForEditor(editor) or editor != atom.workspace.getActiveTextEditor()
 
     if eventObj?.newText is '>' and !eventObj.oldText
       tokenizedLine = editor.displayBuffer?.tokenizedBuffer?.tokenizedLineForRow(eventObj.newRange.end.row)
@@ -286,14 +297,15 @@ class AtomReact
     disposableBufferEvent = editor.buffer.onDidChange (e) =>
                         @autoCloseTag e, editor
 
-    @disposables.push(disposableBufferEvent);
+    @disposables.add editor.onDidDestroy => disposableBufferEvent.dispose()
+
+    @disposables.add(disposableBufferEvent);
 
   deactivate: ->
-    for disposable in @disposables
-      disposable.dispose()
+    @disposables.dispose()
   activate: ->
 
-    @disposables = [];
+    @disposables = new CompositeDisposable();
 
     jsxTagStartPattern = '(?x)((^|=|return)\\s*<([^!/?](?!.+?(</.+?>))))'
     jsxComplexAttributePattern = '(?x)\\{ [^}"\']* $|\\( [^)"\']* $'
@@ -313,10 +325,10 @@ class AtomReact
     disposableHTMLTOJSX = atom.commands.add 'atom-workspace', 'react:HTML-to-JSX', => @onHTMLToJSX()
     disposableProcessEditor = atom.workspace.observeTextEditors @processEditor.bind(this)
 
-    @disposables.push disposableConfigListener
-    @disposables.push disposableReformat
-    @disposables.push disposableHTMLTOJSX
-    @disposables.push disposableProcessEditor
+    @disposables.add disposableConfigListener
+    @disposables.add disposableReformat
+    @disposables.add disposableHTMLTOJSX
+    @disposables.add disposableProcessEditor
 
 
 module.exports = AtomReact

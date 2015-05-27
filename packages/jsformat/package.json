@@ -1,7 +1,7 @@
 {
   "name": "jsformat",
   "main": "./lib/format",
-  "version": "0.8.0",
+  "version": "0.8.1",
   "private": true,
   "description": "javascript formatting for the atom text editor",
   "keywords": [
@@ -30,10 +30,10 @@
     "url": "https://github.com/jdc0589/jsformat-atom/issues"
   },
   "homepage": "https://github.com/jdc0589/jsformat-atom",
-  "_id": "jsformat@0.8.0",
-  "_shasum": "63b6c9a3d56716dad53b0ea14f0acfe0bdecf4db",
-  "_resolved": "file:../d-115322-15342-10hnvqe/package.tgz",
-  "_from": "../d-115322-15342-10hnvqe/package.tgz",
+  "_id": "jsformat@0.8.1",
+  "_shasum": "d7366ed5b4dde1c2fde5e4e72ba5758d44f67703",
+  "_resolved": "file:../d-115419-46711-1t6wrtf/package.tgz",
+  "_from": "../d-115419-46711-1t6wrtf/package.tgz",
   "_atomModuleCache": {
     "version": 1,
     "dependencies": [
@@ -54,12 +54,12 @@
       },
       {
         "name": "grim",
-        "version": "1.2.2",
+        "version": "1.4.1",
         "path": "node_modules/atom-space-pen-views/node_modules/space-pen/node_modules/grim/lib/grim.js"
       },
       {
         "name": "coffeestack",
-        "version": "1.1.1",
+        "version": "1.1.2",
         "path": "node_modules/atom-space-pen-views/node_modules/space-pen/node_modules/grim/node_modules/coffeestack/index.js"
       },
       {
@@ -74,7 +74,7 @@
       },
       {
         "name": "fs-plus",
-        "version": "2.7.1",
+        "version": "2.8.1",
         "path": "node_modules/atom-space-pen-views/node_modules/space-pen/node_modules/grim/node_modules/coffeestack/node_modules/fs-plus/lib/fs-plus.js"
       },
       {
@@ -144,7 +144,7 @@
       },
       {
         "name": "jquery",
-        "version": "2.1.3",
+        "version": "2.1.4",
         "path": "node_modules/atom-space-pen-views/node_modules/space-pen/node_modules/jquery/dist/jquery.js"
       },
       {
@@ -164,12 +164,12 @@
       },
       {
         "name": "grim",
-        "version": "1.2.2",
+        "version": "1.4.1",
         "path": "node_modules/event-kit/node_modules/grim/lib/grim.js"
       },
       {
         "name": "coffeestack",
-        "version": "1.1.1",
+        "version": "1.1.2",
         "path": "node_modules/event-kit/node_modules/grim/node_modules/coffeestack/index.js"
       },
       {
@@ -184,7 +184,7 @@
       },
       {
         "name": "fs-plus",
-        "version": "2.7.1",
+        "version": "2.8.1",
         "path": "node_modules/event-kit/node_modules/grim/node_modules/coffeestack/node_modules/fs-plus/lib/fs-plus.js"
       },
       {
@@ -294,7 +294,7 @@
       },
       {
         "name": "mkdirp",
-        "version": "0.5.0",
+        "version": "0.5.1",
         "path": "node_modules/js-beautify/node_modules/mkdirp/index.js"
       },
       {
@@ -304,7 +304,7 @@
       },
       {
         "name": "nopt",
-        "version": "3.0.1",
+        "version": "3.0.2",
         "path": "node_modules/js-beautify/node_modules/nopt/lib/nopt.js"
       },
       {
@@ -785,8 +785,6 @@
         "node_modules/atom-space-pen-views/node_modules/space-pen/node_modules/grim/node_modules/emissary/node_modules/es6-weak-map/valid-weak-map.js",
         "node_modules/atom-space-pen-views/node_modules/space-pen/node_modules/grim/node_modules/emissary/node_modules/mixto/lib/mixin.js",
         "node_modules/atom-space-pen-views/node_modules/space-pen/node_modules/grim/node_modules/emissary/node_modules/property-accessors/lib/property-accessors.js",
-        "node_modules/atom-space-pen-views/node_modules/space-pen/node_modules/jquery/dist/cdn/jquery-2.1.3.js",
-        "node_modules/atom-space-pen-views/node_modules/space-pen/node_modules/jquery/dist/cdn/jquery-2.1.3.min.js",
         "node_modules/atom-space-pen-views/node_modules/space-pen/node_modules/jquery/dist/jquery.js",
         "node_modules/atom-space-pen-views/node_modules/space-pen/node_modules/jquery/dist/jquery.min.js",
         "node_modules/atom-space-pen-views/node_modules/space-pen/node_modules/jquery/src/ajax/jsonp.js",
