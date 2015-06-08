@@ -24,6 +24,7 @@ Currently supported grammars are:
   * Go <sup>[*](#asterisk)</sup>
   * Groovy
   * Haskell
+  * Java
   * Javascript
   * Julia
   * Kotlin
@@ -43,6 +44,7 @@ Currently supported grammars are:
   * Python
   * RSpec
   * Racket
+  * [RANT](https://github.com/TheBerkin/Rant)
   * Ruby
   * Ruby on Rails
   * Rust

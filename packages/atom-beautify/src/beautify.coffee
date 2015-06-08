@@ -8,6 +8,8 @@ _ = require("lodash")
 Beautifiers = require("./beautifiers")
 beautifier = new Beautifiers()
 defaultLanguageOptions = beautifier.options
+logger = require('./logger')(__filename)
+Promise = require('bluebird')
 
 # Lazy loaded dependencies
 fs = null
@@ -74,7 +76,7 @@ beautify = ({onSave}) ->
 
             # console.log(e)
             stack = error.stack
-            detail = error.message
+            detail = error.description or error.message
             atom.notifications?.addError(error.message, {
                 stack, detail, dismissable : true})
 
@@ -186,7 +188,7 @@ beautify = ({onSave}) ->
 beautifyFilePath = (filePath, callback) ->
 
     # Show in progress indicate on file's tree-view entry
-    $ ?= require("space-pen").$
+    $ ?= require("atom-space-pen-views").$
     $el = $(".icon-file-text[data-path=\"#{filePath}\"]")
     $el.addClass('beautifying')
 
@@ -243,7 +245,7 @@ beautifyDirectory = ({target}) ->
 
 
     # Show in progress indicate on directory's tree-view entry
-    $ ?= require("space-pen").$
+    $ ?= require("atom-space-pen-views").$
     $el = $(".icon-file-directory[data-path=\"#{dirPath}\"]")
     $el.addClass('beautifying')
 
@@ -332,59 +334,64 @@ debug = () ->
     # Beautification Options
     # Get all options
     allOptions = beautifier.getOptionsForPath(filePath, editor)
-    [
-        editorOptions
-        configOptions
-        homeOptions
-        editorConfigOptions
-    ] = allOptions
-    projectOptions = allOptions[4..]
-    addInfo('Editor Options', "\n" +
-    "Options from Atom Editor settings\n" +
-    "```json\n#{JSON.stringify(editorOptions, undefined, 4)}\n```")
-    addInfo('Config Options', "\n" +
-    "Options from Atom Beautify package settings\n" +
-    "```json\n#{JSON.stringify(configOptions, undefined, 4)}\n```")
-    addInfo('Home Options', "\n" +
-    "Options from `#{path.resolve(beautifier.getUserHome(), '.jsbeautifyrc')}`\n" +
-    "```json\n#{JSON.stringify(homeOptions, undefined, 4)}\n```")
-    addInfo('EditorConfig Options', "\n" +
-    "Options from [EditorConfig](http://editorconfig.org/) file\n" +
-    "```json\n#{JSON.stringify(editorConfigOptions, undefined, 4)}\n```")
-    addInfo('Project Options', "\n" +
-    "Options from `.jsbeautifyrc` files starting from directory `#{path.dirname(filePath)}` and going up to root\n" +
-    "```json\n#{JSON.stringify(projectOptions, undefined, 4)}\n```")
-    logs = ""
-    logger = require('./logger')(__filename)
-    subscription = logger.onLogging((msg) ->
+    # Resolve options with promises
+    Promise.all(allOptions)
+    .then((allOptions) =>
+        # Extract options
+        [
+            editorOptions
+            configOptions
+            homeOptions
+            editorConfigOptions
+        ] = allOptions
+        projectOptions = allOptions[4..]
 
-        # console.log('logging', msg)
-        logs += msg
-    )
-    cb = (result) ->
-        subscription.dispose()
-        addHeader(2, "Results")
+        # Show options
+        addInfo('Editor Options', "\n" +
+        "Options from Atom Editor settings\n" +
+        "```json\n#{JSON.stringify(editorOptions, undefined, 4)}\n```")
+        addInfo('Config Options', "\n" +
+        "Options from Atom Beautify package settings\n" +
+        "```json\n#{JSON.stringify(configOptions, undefined, 4)}\n```")
+        addInfo('Home Options', "\n" +
+        "Options from `#{path.resolve(beautifier.getUserHome(), '.jsbeautifyrc')}`\n" +
+        "```json\n#{JSON.stringify(homeOptions, undefined, 4)}\n```")
+        addInfo('EditorConfig Options', "\n" +
+        "Options from [EditorConfig](http://editorconfig.org/) file\n" +
+        "```json\n#{JSON.stringify(editorConfigOptions, undefined, 4)}\n```")
+        addInfo('Project Options', "\n" +
+        "Options from `.jsbeautifyrc` files starting from directory `#{path.dirname(filePath)}` and going up to root\n" +
+        "```json\n#{JSON.stringify(projectOptions, undefined, 4)}\n```")
+        logs = ""
+        subscription = logger.onLogging((msg) ->
 
-
-        # Logs
-        addInfo('Beautified File Contents', "\n```#{codeBlockSyntax}\n#{result}\n```")
-        addInfo('Logs', "\n```\n#{logs}\n```")
-
-
-        # Save to clipboard
-        atom.clipboard.write(debugInfo)
-        confirm('Atom Beautify debugging information is now in your clipboard.\n' +
-        'You can now paste this into an Issue you are reporting here\n' +
-        'https://github.com/Glavin001/atom-beautify/issues/ \n\n' +
-        'Warning: Be sure to look over the debug info before you send it,
-        to ensure you are not sharing undesirable private information.'
+            # console.log('logging', msg)
+            logs += msg
         )
-    try
-        beautifier.beautify(text, allOptions, grammarName, filePath)
-        .then(cb)
-        .catch(cb)
-    catch e
-        return cb(e)
+        cb = (result) ->
+            subscription.dispose()
+            addHeader(2, "Results")
+
+            # Logs
+            addInfo('Beautified File Contents', "\n```#{codeBlockSyntax}\n#{result}\n```")
+            addInfo('Logs', "\n```\n#{logs}\n```")
+
+            # Save to clipboard
+            atom.clipboard.write(debugInfo)
+            confirm('Atom Beautify debugging information is now in your clipboard.\n' +
+            'You can now paste this into an Issue you are reporting here\n' +
+            'https://github.com/Glavin001/atom-beautify/issues/ \n\n' +
+            'Warning: Be sure to look over the debug info before you send it,
+            to ensure you are not sharing undesirable private information.'
+            )
+        try
+            beautifier.beautify(text, allOptions, grammarName, filePath)
+            .then(cb)
+            .catch(cb)
+        catch e
+            return cb(e)
+    )
+
 handleSaveEvent = =>
     atom.workspace.observeTextEditors (editor) =>
         buffer = editor.getBuffer()
@@ -392,55 +399,34 @@ handleSaveEvent = =>
             path ?= require('path')
             # Get Grammar
             grammar = editor.getGrammar().name
-            # Get language
+            # Get file extension
             fileExtension = path.extname(filePath)
-            languages = beautifier.languages.getLanguages({grammar, fileExtension})
+            # Remove prefix "." (period) in fileExtension
+            fileExtension = fileExtension.substr(1)
+            # Get language
+            languages = beautifier.languages.getLanguages({grammar, extension: fileExtension})
             if languages.length < 1
                 return
             # TODO: select appropriate language
             language = languages[0]
             # Get language config
-            beautifyOnSave = atom.config.get("atom-beautify.language_#{language.namespace}_beautify_on_save")
+            key = "atom-beautify.language_#{language.namespace}_beautify_on_save"
+            beautifyOnSave = atom.config.get(key)
+            logger.verbose('save editor positions', key, beautifyOnSave)
             if beautifyOnSave
+                posArray = getCursors(editor)
+                origScrollTop = editor.getScrollTop()
                 beautifyFilePath(filePath, ->
                     buffer.reload()
+                    logger.verbose('restore editor positions', posArray,origScrollTop)
+                    setCursors(editor, posArray)
+                    editor.setScrollTop(origScrollTop)
                 )
             )
         plugin.subscribe disposable
 {Subscriber} = require path.join(atom.packages.resourcePath, 'node_modules', 'emissary')
 Subscriber.extend plugin
-plugin.config = _.merge(
-    analytics :
-        type : 'boolean'
-        default : true
-        description : "Automatically send usage information (NEVER CODE) to Google Analytics"
-    _analyticsUserId :
-        type : 'string'
-        default : ""
-        description : "Unique identifier for this user for tracking usage analytics"
-    _loggerLevel :
-        type : 'string'
-        default : 'warn'
-        description : 'Set the level for the logger'
-        enum : ['verbose', 'debug', 'info', 'warn', 'error']
-    beautifyOnSave :
-        title : "DEPRECATED: Beautfy On Save"
-        type : 'boolean'
-        default : false
-        description : "Beautify active editor on save"
-    beautifyEntireFileOnSave :
-        type : 'boolean'
-        default : true
-        description : "When beautifying on save, use the entire file, even if there is selected text in the editor"
-    muteUnsupportedLanguageErrors :
-        type : 'boolean'
-        default : false
-        description : "Do not show \"Unsupported Language\" errors when they occur"
-    muteAllErrors :
-        type : 'boolean'
-        default : false
-        description : "Do not show any/all errors when they occur"
-, defaultLanguageOptions)
+plugin.config = _.merge(require('./config.coffee'), defaultLanguageOptions)
 plugin.activate = ->
     handleSaveEvent()
     plugin.subscribe atom.config.observe("atom-beautify.beautifyOnSave", handleSaveEvent)

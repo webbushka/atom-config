@@ -36,12 +36,12 @@ module.exports =
       "File Based":
         command: "bash"
         args: (context) -> ['-c', "xcrun clang++ -fcolor-diagnostics -Wc++11-extensions -Wall -include stdio.h -include iostream " + context.filepath + " -o /tmp/cpp.out && /tmp/cpp.out"]
-  
+
   'C# Script File':
     "File Based":
       command: "scriptcs"
       args: (context) -> ['-script', context.filepath]
-  
+
   CoffeeScript:
     "Selection Based":
       command: "coffee"
@@ -123,12 +123,28 @@ module.exports =
       command: "iced"
       args: (context) -> [context.filepath]
 
+  Java:
+    "File Based":
+      command: "bash"
+      args: (context) ->
+        className = context.filename.replace /\.java$/, ""
+        args = ['-c', "javac -d /tmp #{context.filepath} && java -cp /tmp #{className}"]
+        return args
+
   JavaScript:
     "Selection Based":
       command: "node"
       args: (context)  -> ['-e', context.getCode()]
     "File Based":
       command: "node"
+      args: (context) -> [context.filepath]
+      
+  'Babel ES6 Javascript':
+    "Selection Based":
+      command: "babel-node"
+      args: (context) -> ['-e', context.getCode()]
+    "File Based":
+      command: "babel-node"
       args: (context) -> [context.filepath]
 
   Julia:
@@ -146,13 +162,13 @@ module.exports =
         code = context.getCode(true)
         tmpFile = GrammarUtils.createTempFileWithCode(code, ".kt")
         jarName = tmpFile.replace /\.kt$/, ".jar"
-        args = ['-c', "kotlinc #{tmpFile} -include-runtime -d #{jarName} && java -jar #{jarName} && rm #{jarName}"]
+        args = ['-c', "kotlinc #{tmpFile} -include-runtime -d #{jarName} && java -jar #{jarName}"]
         return args
     "File Based":
       command: "bash"
       args: (context) ->
         jarName = context.filename.replace /\.kt$/, ".jar"
-        args = ['-c', "kotlinc #{context.filepath} -include-runtime -d #{jarName} && java -jar #{jarName} && rm #{jarName}"]
+        args = ['-c', "kotlinc #{context.filepath} -include-runtime -d /tmp/#{jarName} && java -jar /tmp/#{jarName}"]
         return args
 
   LilyPond:
@@ -272,6 +288,17 @@ module.exports =
     "File Based":
       command: "racket"
       args: (context) -> [context.filepath]
+
+  RANT:
+    "Selection Based":
+      command: "RantConsole.exe"
+      args: (context) ->
+        code = context.getCode(true)
+        tmpFile = GrammarUtils.createTempFileWithCode(code)
+        ['-file', tmpFile]
+    "File Based":
+      command: "RantConsole.exe"
+      args: (context) -> ['-file', context.filepath]
 
   RSpec:
     "Selection Based":

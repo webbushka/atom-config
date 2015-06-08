@@ -6,15 +6,11 @@
     preferredLineLength: 200
     softTabs: false
     fontFamily: "Inconsolata"
-    fontSize: 18
+    fontSize: 17
   core:
     themes: [
       "seti-ui"
       "base16-tomorrow-dark-theme"
-    ]
-    disabledPackages: [
-      "tabs"
-      "tree-view"
     ]
   "exception-reporting":
     userId: "e46f9b99-f096-8f42-dc8c-33910afb680a"
@@ -38,13 +34,9 @@
     {}
   emmet:
     {}
-  "tree-view":
-    hideVcsIgnoredFiles: false
-    hideIgnoredNames: false
-    showOnRightSide: false
-    sortFoldersBeforeFiles: true
   tabs:
     showIcons: true
+    usePreviewTabs: true
   "sublime-tabs":
     {}
 ".jsx.regexp.source":
